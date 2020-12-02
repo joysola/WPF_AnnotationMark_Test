@@ -1,0 +1,61 @@
+﻿<Window x:Class="Annotation.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:UICommon="clr-namespace:UICommon.Controls;assembly=UICommon"
+        xmlns:local="clr-namespace:Annotation"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="500" Width="1000">
+    <Grid x:Name="grid">
+        <Grid.Resources>
+            <!--右键菜单-->
+            <ContextMenu x:Key="ContextMenu" x:Name="context"  IsOpen="False">
+                <MenuItem Name="menuBatchLendout" Header="删除" Command="{Binding DeleteCommand}"/>
+                <Separator></Separator>
+                <MenuItem Name="menuBatchGiveBack" Header="批注" Command="{Binding MarkCommand}"/>
+            </ContextMenu>
+        </Grid.Resources>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Orientation="Horizontal">
+                <Button x:Name="btn" Width="60" Content="开始绘制" Click="btn_Click" />
+                <Button x:Name="btnRest" Width="60" Content="重置大小" Click="btnRest_Click" />
+                <Button Width="60" Content="保存" Command="{Binding UpdateAllCommand}" CommandParameter="{Binding Path=Children,ElementName=cans}"/>
+                <TextBlock x:Name="positionTxt"/>
+            </StackPanel>
+            <Grid Grid.Row="1">
+                <!--<ScrollViewer Grid.Row="1" Height="{Binding ActualHeight,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Grid,AncestorLevel=1}}" 
+                              Width="{Binding ActualWidth,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Grid,AncestorLevel=1}}">-->
+                <!--ContextMenu="{StaticResource ContextMenu}"-->
+                <Canvas x:Name="cans"  Focusable="True" ContextMenu="{StaticResource ContextMenu}"
+                        PreviewMouseWheel="cans_PreviewMouseWheel"
+                        PreviewMouseDown="cans_PreviewMouseDown" PreviewMouseMove="cans_PreviewMouseMove" PreviewMouseUp="cans_PreviewMouseUp"
+                        Width="{Binding  RelativeSource={RelativeSource Mode=Self},Path=Background.ImageSource.Width}"
+                        Height="{Binding  RelativeSource={RelativeSource Mode=Self}, Path=Background.ImageSource.Height}">
+                    <!--Width="{Binding ActualWidth, Mode=Default, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}}}"
+                        Height="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}}}">-->
+                    <!--Fill="Transparent"-->
+                    <Canvas.RenderTransform>
+                        <ScaleTransform></ScaleTransform>
+                    </Canvas.RenderTransform>
+
+                    <!--<Rectangle Stroke="Red"  StrokeThickness="3"
+                               Width="100" Height="100" Canvas.Left="100" Canvas.Top="100"
+                               UICommon:DragControlHelper.IsEditable="True" 
+                               UICommon:DragControlHelper.IsSelectable="True"
+                               />-->
+                    <!-- BorderThickness="2"-->
+                    <UICommon:DragControlHelper CornerWidth="15" BorderBrush="Purple" TargetElement="{Binding SelectedRectangle,Mode=OneWayToSource}" 
+                                                DragCompleted="DragControlHelper_DragCompleted"/>
+                </Canvas>
+
+                <!--</ScrollViewer>-->
+            </Grid>
+        </Grid>
+
+    </Grid>
+</Window>
