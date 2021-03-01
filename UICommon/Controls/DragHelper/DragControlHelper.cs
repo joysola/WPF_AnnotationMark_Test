@@ -14,7 +14,7 @@ namespace UICommon.Controls
             this.Loaded += OnLoaded;
             this.Unloaded += OnUnloaded;
         }
-        
+
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
             AttachParentEvents();
@@ -121,6 +121,20 @@ namespace UICommon.Controls
         }
         #endregion
 
+        #region StrokeThickness
+        /// <summary>
+        /// 自定义选中状态八个小矩形框线宽大小
+        /// </summary>
+        public double StrokeThickness
+        {
+            get { return (double)GetValue(StrokeThicknessProperty); }
+            set { SetValue(StrokeThicknessProperty, value); }
+        }
+        public static readonly DependencyProperty StrokeThicknessProperty =
+            DependencyProperty.Register("StrokeThickness", typeof(double), typeof(DragControlHelper),
+                new FrameworkPropertyMetadata(default(double)));
+        #endregion StrokeThickness
+
         #endregion
 
         #region Parent Event Handler
@@ -196,7 +210,7 @@ namespace UICommon.Controls
 
             if (Target is Shape)
             {
-                Thickness = (Target as Shape).StrokeThickness;
+                Thickness = StrokeThickness == 0 ? (Target as Shape).StrokeThickness : StrokeThickness;
             }
 
             bool CanEdit = GetIsEditable(Target);
