@@ -53,6 +53,30 @@ namespace UICommon.Controls
         }
         #endregion
 
+        #region StrokeThickness
+        /// <summary>
+        /// 自定义选中状态八个小矩形框线宽大小
+        /// </summary>
+        public double StrokeThickness
+        {
+            get { return (double)GetValue(StrokeThicknessProperty); }
+            set { SetValue(StrokeThicknessProperty, value); }
+        }
+        public static readonly DependencyProperty StrokeThicknessProperty =
+            DependencyProperty.Register("StrokeThickness", typeof(double), typeof(DragHelperBase),
+                new FrameworkPropertyMetadata(default(double)));
+        /// <summary>
+        /// Targert矩形的极限尺寸
+        /// </summary>
+        public double LimitTargetSize
+        {
+            get { return (double)GetValue(LimitTargetSizeProperty); }
+            set { SetValue(LimitTargetSizeProperty, value); }
+        }
+        public static readonly DependencyProperty LimitTargetSizeProperty =
+            DependencyProperty.Register(nameof(LimitTargetSize), typeof(double), typeof(DragHelperBase),
+                new FrameworkPropertyMetadata(default(double)));
+        #endregion StrokeThickness
         #endregion
 
         #region Drag & Resize
@@ -62,12 +86,12 @@ namespace UICommon.Controls
         {
             Rect TargetActualBound = GetTargetActualBound();
 
-            double TopOld  = CorrectDoubleValue(TargetActualBound.Y);
+            double TopOld = CorrectDoubleValue(TargetActualBound.Y);
             double LeftOld = CorrectDoubleValue(TargetActualBound.X);
-            double TopNew  = CorrectDoubleValue(TopOld + VerticalChange);
+            double TopNew = CorrectDoubleValue(TopOld + VerticalChange);
             double LeftNew = CorrectDoubleValue(LeftOld + HorizontalChange);
 
-            TopNew  = CorrectNewTop(DragHelperParent, TopNew, TargetActualBound.Height);
+            TopNew = CorrectNewTop(DragHelperParent, TopNew, TargetActualBound.Height);
             LeftNew = CorrectNewLeft(DragHelperParent, LeftNew, TargetActualBound.Width);
 
             Canvas.SetTop(this, TopNew);
@@ -89,18 +113,18 @@ namespace UICommon.Controls
             #region Get Old Value
 
             if (HitedThumb == null) return Rect.Empty;
-            
+
 
             Rect TargetActualBound = GetTargetActualBound();
 
-            double TopOld    = CorrectDoubleValue(TargetActualBound.Y);
-            double LeftOld   = CorrectDoubleValue(TargetActualBound.X);
-            double WidthOld  = CorrectDoubleValue(TargetActualBound.Width);
+            double TopOld = CorrectDoubleValue(TargetActualBound.Y);
+            double LeftOld = CorrectDoubleValue(TargetActualBound.X);
+            double WidthOld = CorrectDoubleValue(TargetActualBound.Width);
             double HeightOld = CorrectDoubleValue(TargetActualBound.Height);
 
-            double TopNew    = TopOld;
-            double LeftNew   = LeftOld;
-            double WidthNew  = WidthOld;
+            double TopNew = TopOld;
+            double LeftNew = LeftOld;
+            double WidthNew = WidthOld;
             double HeightNew = HeightOld;
 
             #endregion
@@ -132,7 +156,10 @@ namespace UICommon.Controls
             {
                 ResizeFromBottom(DragHelperParent, TopOld, HeightOld, VerticalChange, out HeightNew);
             }
-
+            // 判断矩形的极限尺寸（没有设置的话，取CornerWidth尺寸）
+            var limitSize = this.LimitTargetSize == 0 ? this.CornerWidth : this.LimitTargetSize;
+            WidthNew = WidthNew < limitSize ? limitSize : WidthNew;
+            HeightNew = HeightNew < limitSize ? limitSize : HeightNew;
             this.Width = WidthNew;
             this.Height = HeightNew;
             Canvas.SetTop(this, TopNew);
@@ -272,7 +299,7 @@ namespace UICommon.Controls
             base.OnApplyTemplate();
 
             MainGrid = GetPartFormTemplate<Grid>("PART_MainGrid");
-            
+
             AddLogicalChild(MainGrid);
 
             AddHandler(Thumb.DragDeltaEvent, new DragDeltaEventHandler(OnDragDelta));
@@ -356,14 +383,14 @@ namespace UICommon.Controls
         #region Drag Event Handler
         private void OnDragDelta(object sender, DragDeltaEventArgs e)
         {
-            if(!GetTargetIsEditable())
+            if (!GetTargetIsEditable())
             {
                 e.Handled = true;
                 return;
             }
 
             CustomThumb thumb = e.OriginalSource as CustomThumb;
-            
+
             if (thumb == null)
             {
                 return;

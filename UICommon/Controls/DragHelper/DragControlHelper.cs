@@ -121,19 +121,7 @@ namespace UICommon.Controls
         }
         #endregion
 
-        #region StrokeThickness
-        /// <summary>
-        /// 自定义选中状态八个小矩形框线宽大小
-        /// </summary>
-        public double StrokeThickness
-        {
-            get { return (double)GetValue(StrokeThicknessProperty); }
-            set { SetValue(StrokeThicknessProperty, value); }
-        }
-        public static readonly DependencyProperty StrokeThicknessProperty =
-            DependencyProperty.Register("StrokeThickness", typeof(double), typeof(DragControlHelper),
-                new FrameworkPropertyMetadata(default(double)));
-        #endregion StrokeThickness
+       
 
         #endregion
 

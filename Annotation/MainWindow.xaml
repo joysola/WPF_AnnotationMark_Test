@@ -49,8 +49,9 @@
                                UICommon:DragControlHelper.IsSelectable="True"
                                />-->
                     <!-- BorderThickness="2"-->
-                    <UICommon:DragControlHelper CornerWidth="15" BorderBrush="Purple" TargetElement="{Binding SelectedRectangle,Mode=OneWayToSource}" 
-                                                DragCompleted="DragControlHelper_DragCompleted" StrokeThickness="2"/>
+                    <UICommon:DragControlHelper CornerWidth="10" BorderBrush="Purple" TargetElement="{Binding SelectedRectangle,Mode=OneWayToSource}" 
+                                                DragCompleted="DragControlHelper_DragCompleted" StrokeThickness="2"
+                                                LimitTargetSize="30"/>
                 </Canvas>
 
                 <!--</ScrollViewer>-->
